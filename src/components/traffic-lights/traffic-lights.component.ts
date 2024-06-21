@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'traffic-lights',
+  selector: 'app-traffic-lights',
   standalone: true,
   imports: [],
   templateUrl: './traffic-lights.component.html',

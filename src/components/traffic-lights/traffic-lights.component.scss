@@ -1,13 +1,13 @@
 @use "../../styles" as *;
 
-.traffic-light {
+.app-traffic-light {
   background-color: black;
   width: 150px;
   height: 50px;
-  display: flex;
   @include flex-around;
   padding: 10px 5px;
   border-radius: 10px;
+  margin: 30px;
 
   span {
     display: block;

@@ -1,0 +1,9 @@
+@use "../../styles.scss" as *;
+
+.app-north-south {
+  position: absolute;
+  top: 30px;
+  left: 500px;
+  @include flex-center;
+  flex-direction: column;
+}
