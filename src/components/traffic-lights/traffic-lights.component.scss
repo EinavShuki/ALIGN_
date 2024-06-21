@@ -1,0 +1,30 @@
+@use "../../styles" as *;
+
+.traffic-light {
+  background-color: black;
+  width: 150px;
+  height: 50px;
+  display: flex;
+  @include flex-around;
+  padding: 10px 5px;
+  border-radius: 10px;
+
+  span {
+    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+
+    &.--hidden {
+      background-color: gray;
+    }
+  }
+
+  &__red {
+    background-color: red;
+  }
+
+  &__green {
+    background-color: green;
+  }
+}
