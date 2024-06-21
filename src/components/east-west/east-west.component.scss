@@ -1,0 +1,10 @@
+@use "../../styles.scss" as *;
+
+.app-east-west {
+  position: absolute;
+  top: 100px;
+  left: 560px;
+  @include flex-center;
+  flex-direction: column;
+  transform: rotate(90deg);
+}
