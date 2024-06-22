@@ -1,7 +1,11 @@
 <div class="app-home">
-  <app-north-south [_isGreen]="_traficService.activeRoad() === 'NorthSouth'" />
-  <app-east-west [_isGreen]="_traficService.activeRoad() !== 'NorthSouth'" />
+  <app-north-south
+    [_carsAmount]="_traficService.numberOfCarsEnterNs()"
+    [_isGreen]="_traficService.activeRoad() === 'NorthSouth'"
+  />
+  <app-east-west
+    [_carsAmount]="_traficService.numberOfCarsEnterEw()"
+    [_isGreen]="_traficService.activeRoad() !== 'NorthSouth'"
+  />
 </div>
 {{ _traficService.activeRoad() }}
-{{ "numberOfCarsAtNs: " + _traficService.numberOfCarsEnterNs() }}
-{{ "numberOfCarsAtEw: " + _traficService.numberOfCarsEnterEw() }}

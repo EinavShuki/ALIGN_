@@ -11,4 +11,5 @@ import { RoadComponent } from '../road/road.component';
 })
 export class NorthSouthComponent {
   _isGreen = input<boolean>(false);
+  _carsAmount = input<number>(0);
 }

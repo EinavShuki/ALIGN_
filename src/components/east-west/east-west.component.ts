@@ -11,4 +11,5 @@ import { TrafficLightsComponent } from '../traffic-lights/traffic-lights.compone
 })
 export class EastWestComponent {
   _isGreen = input<boolean>(false);
+  _carsAmount = input<number>(0);
 }
