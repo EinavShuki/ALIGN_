@@ -34,8 +34,8 @@ export class TraficService {
   nsRoad: WritableSignal<Map<number, number>> = signal(new Map());
   ewRoad: WritableSignal<Map<number, number>> = signal(new Map());
   timer = signal(0);
-  numberOfCarsAtNs = signal(0);
-  numberOfCarsAtEw = signal(0);
+  numberOfCarsEnterNs = signal(0);
+  numberOfCarsEnterEw = signal(0);
 
   constructor() {
     this._getCarsStream();
@@ -88,19 +88,19 @@ export class TraficService {
     timer: number,
   ) {
     if (nsRoad.has(timer + 1) || nsRoad.has(timer + 2)) {
-      this.numberOfCarsAtNs.update(
+      this.numberOfCarsEnterNs.update(
         (prev) => prev + (nsRoad.get(timer + 2) || 0),
       );
-      this.numberOfCarsAtNs.update(
+      this.numberOfCarsEnterNs.update(
         (prev) => prev + (nsRoad.get(timer + 1) || 0),
       );
     }
 
     if (ewRoad.has(timer + 2) || ewRoad.has(timer + 1)) {
-      this.numberOfCarsAtEw.update(
+      this.numberOfCarsEnterEw.update(
         (prev) => prev + (ewRoad.get(timer + 2) || 0),
       );
-      this.numberOfCarsAtEw.update(
+      this.numberOfCarsEnterEw.update(
         (prev) => prev + (ewRoad.get(timer + 1) || 0),
       );
     }
@@ -123,7 +123,7 @@ export class TraficService {
       if (nsRoad.get(currentTime)! === 0) {
         nsRoad.delete(currentTime);
       }
-      this.numberOfCarsAtNs.update((prev) => prev - 1);
+      this.numberOfCarsEnterNs.update((prev) => prev - 1);
       this.nsRoad.set(nsRoad);
     };
 
@@ -134,7 +134,7 @@ export class TraficService {
       if (ewRoad.get(currentTime)! === 0) {
         ewRoad.delete(currentTime);
       }
-      this.numberOfCarsAtEw.update((prev) => prev - 1);
+      this.numberOfCarsEnterEw.update((prev) => prev - 1);
       this.ewRoad.set(ewRoad);
     };
     let currentTime: number = this.timesArray[0]!;
