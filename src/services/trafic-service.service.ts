@@ -1,10 +1,7 @@
 import {
   DestroyRef,
   Injectable,
-  Signal,
   WritableSignal,
-  computed,
-  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -26,14 +23,14 @@ export class TraficService {
   private _carMap$: Observable<ICars> = of(cars);
   private _carsNs = signal<number[]>([]);
   private _carsEw = signal<number[]>([]);
+  private _timer = signal(0);
+  private _nsRoad: WritableSignal<Map<number, number>> = signal(new Map());
+  private _ewRoad: WritableSignal<Map<number, number>> = signal(new Map());
 
   activeRoad: WritableSignal<TActiveRoad> = signal(
     CARS_TO_ACTIVE_ROADS['carsEw'],
   );
   timesArray: number[] = [];
-  nsRoad: WritableSignal<Map<number, number>> = signal(new Map());
-  ewRoad: WritableSignal<Map<number, number>> = signal(new Map());
-  timer = signal(0);
   numberOfCarsEnterNs = signal(0);
   numberOfCarsEnterEw = signal(0);
 
@@ -69,8 +66,8 @@ export class TraficService {
         return acc;
       }, null);
     };
-    this.nsRoad.set(getRoad(this._carsNs()));
-    this.ewRoad.set(getRoad(this._carsEw()));
+    this._nsRoad.set(getRoad(this._carsNs()));
+    this._ewRoad.set(getRoad(this._carsEw()));
   }
 
   private _getTimesSet(): void {
@@ -109,8 +106,8 @@ export class TraficService {
   generateActiveRoad(): void {
     debugger;
 
-    const nsRoad: Map<number, number> = this.nsRoad();
-    const ewRoad: Map<number, number> = this.ewRoad();
+    const nsRoad: Map<number, number> = this._nsRoad();
+    const ewRoad: Map<number, number> = this._ewRoad();
 
     if (!this.timesArray.length || (!nsRoad.size && !ewRoad.size)) {
       return;
@@ -124,7 +121,7 @@ export class TraficService {
         nsRoad.delete(currentTime);
       }
       this.numberOfCarsEnterNs.update((prev) => prev - 1);
-      this.nsRoad.set(nsRoad);
+      this._nsRoad.set(nsRoad);
     };
 
     const reducingEW = () => {
@@ -135,7 +132,7 @@ export class TraficService {
         ewRoad.delete(currentTime);
       }
       this.numberOfCarsEnterEw.update((prev) => prev - 1);
-      this.ewRoad.set(ewRoad);
+      this._ewRoad.set(ewRoad);
     };
     let currentTime: number = this.timesArray[0]!;
 
@@ -144,10 +141,10 @@ export class TraficService {
       currentTime = this.timesArray[0]!;
     }
 
-    this.timer.update((prev) => prev + 2);
-    this._updatenumberOfCars(nsRoad, ewRoad, this.timer());
+    this._timer.update((prev) => prev + 2);
+    this._updatenumberOfCars(nsRoad, ewRoad, this._timer());
 
-    if (currentTime > this.timer()) {
+    if (currentTime > this._timer()) {
       //The car is not there it
       return;
     }
