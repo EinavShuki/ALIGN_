@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
+  effect,
   inject,
 } from '@angular/core';
 import { TrafficLightsComponent } from '../../components/traffic-lights/traffic-lights.component';
@@ -21,4 +22,19 @@ import { CommonModule } from '@angular/common';
 })
 export class HomeComponent {
   protected _traficService = inject(TraficService);
+
+  constructor() {
+    this._traficService.getTimesSet();
+    this._traficService.generateActiveRoad();
+    setInterval(() => {
+      console.log('this._traficService.timeSet', this._traficService.timesSet);
+      console.log(
+        'this._traficService.activeRoad',
+        this._traficService.activeRoad,
+      );
+      if (this._traficService.timesSet.length) {
+        this._traficService.generateActiveRoad();
+      }
+    }, 2000);
+  }
 }
