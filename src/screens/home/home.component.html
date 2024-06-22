@@ -1,6 +1,6 @@
 <div class="app-home">
-  <app-north-south />
-  <app-east-west />
+  <app-north-south [_isGreen]="_traficService.activeRoad() === 'NorthSouth'" />
+  <app-east-west [_isGreen]="_traficService.activeRoad() !== 'NorthSouth'" />
 </div>
 {{ _traficService.activeRoad() }}
 {{ "numberOfCarsAtNs: " + _traficService.numberOfCarsEnterNs() }}

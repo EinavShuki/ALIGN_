@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  input,
   signal,
   WritableSignal,
 } from '@angular/core';
@@ -14,5 +15,5 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrafficLightsComponent {
-  protected _isGreen: WritableSignal<boolean> = signal(false);
+  _isGreen = input<boolean>(false);
 }

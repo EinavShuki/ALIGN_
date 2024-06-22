@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { RoadComponent } from '../road/road.component';
 import { TrafficLightsComponent } from '../traffic-lights/traffic-lights.component';
 
@@ -9,4 +9,6 @@ import { TrafficLightsComponent } from '../traffic-lights/traffic-lights.compone
   styleUrl: './east-west.component.scss',
   imports: [RoadComponent, TrafficLightsComponent],
 })
-export class EastWestComponent {}
+export class EastWestComponent {
+  _isGreen = input<boolean>(false);
+}
