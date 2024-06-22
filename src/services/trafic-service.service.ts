@@ -28,6 +28,7 @@ export class TraficService {
   private _carsEw = signal<number[]>([]);
   private _nsRoad: WritableSignal<Map<number, number>> = signal(new Map());
   private _ewRoad: WritableSignal<Map<number, number>> = signal(new Map());
+  private _timer: number = 0;
 
   activeRoad: WritableSignal<TActiveRoad> = signal(
     CARS_TO_ACTIVE_ROADS['carsEw'],
@@ -81,10 +82,11 @@ export class TraficService {
 
   generateActiveRoad(): void {
     debugger;
+
     const nsRoad: Map<number, number> = this._nsRoad();
     const ewRoad: Map<number, number> = this._ewRoad();
 
-    if (!this.timesSet.length || !nsRoad.size || !ewRoad.size) {
+    if (!this.timesSet.length || (!nsRoad.size && !ewRoad.size)) {
       return;
     }
     let currentActiveRoad: TActiveRoad | undefined;
@@ -113,6 +115,13 @@ export class TraficService {
       this.timesSet.shift()!;
       currentTime = this.timesSet[0]!;
     }
+
+    if (currentTime > this._timer) {
+      //The car is not there it
+      this._timer += 2;
+      return;
+    }
+    this._timer = currentTime;
 
     if (nsRoad.has(currentTime) && ewRoad.has(currentTime)) {
       if (nsRoad.get(currentTime)! > ewRoad.get(currentTime)!) {
