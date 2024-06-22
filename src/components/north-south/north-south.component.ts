@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TrafficLightsComponent } from '../traffic-lights/traffic-lights.component';
 import { RoadComponent } from '../road/road.component';
 
@@ -8,8 +8,9 @@ import { RoadComponent } from '../road/road.component';
   templateUrl: './north-south.component.html',
   styleUrl: './north-south.component.scss',
   imports: [TrafficLightsComponent, RoadComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NorthSouthComponent {
-  _isGreen = input<boolean>(false);
+  _carLeaves = input<boolean>(false);
   _carsAmount = input<number>(0);
 }

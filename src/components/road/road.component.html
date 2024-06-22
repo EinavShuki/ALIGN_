@@ -10,6 +10,6 @@
 </div>
 <div class="app-road__car">
   @for (car of _carsArr(); track $index) {
-    <app-car />
+    <app-car [_carLeaves]="_carLeaves()" />
   }
 </div>

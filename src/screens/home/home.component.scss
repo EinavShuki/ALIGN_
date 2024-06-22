@@ -1,0 +1,4 @@
+@use "../../styles.scss" as *;
+.app-home {
+  @include flex-center;
+}

@@ -33,6 +33,8 @@ export class TraficService {
   timesArray: number[] = [];
   numberOfCarsEnterNs = signal(0);
   numberOfCarsEnterEw = signal(0);
+  carLeavesNs = signal(false);
+  carLeavesEw = signal(false);
 
   constructor() {
     this._getCarsStream();
@@ -104,8 +106,6 @@ export class TraficService {
   }
 
   generateActiveRoad(): void {
-    debugger;
-
     const nsRoad: Map<number, number> = this._nsRoad();
     const ewRoad: Map<number, number> = this._ewRoad();
 
@@ -122,6 +122,8 @@ export class TraficService {
       }
       this.numberOfCarsEnterNs.update((prev) => prev - 1);
       this._nsRoad.set(nsRoad);
+      this.carLeavesNs.set(true);
+      this.carLeavesEw.set(false);
     };
 
     const reducingEW = () => {
@@ -133,6 +135,8 @@ export class TraficService {
       }
       this.numberOfCarsEnterEw.update((prev) => prev - 1);
       this._ewRoad.set(ewRoad);
+      this.carLeavesNs.set(false);
+      this.carLeavesEw.set(true);
     };
     let currentTime: number = this.timesArray[0]!;
 

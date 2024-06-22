@@ -1,11 +1,13 @@
 <div class="app-home">
+  <p>Green time remaining: 3 seconds</p>
+
   <app-north-south
     [_carsAmount]="_traficService.numberOfCarsEnterNs()"
-    [_isGreen]="_traficService.activeRoad() === 'NorthSouth'"
+    [_carLeaves]="_traficService.carLeavesNs()"
   />
   <app-east-west
     [_carsAmount]="_traficService.numberOfCarsEnterEw()"
-    [_isGreen]="_traficService.activeRoad() !== 'NorthSouth'"
+    [_carLeaves]="_traficService.carLeavesEw()"
   />
 </div>
 {{ _traficService.activeRoad() }}

@@ -1,4 +1,16 @@
-import { Component } from '@angular/core';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  input,
+} from '@angular/core';
 
 @Component({
   selector: 'app-car',
@@ -6,5 +18,8 @@ import { Component } from '@angular/core';
   imports: [],
   templateUrl: './car.component.html',
   styleUrl: './car.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarComponent {}
+export class CarComponent {
+  _carLeaves = input<boolean>(false);
+}

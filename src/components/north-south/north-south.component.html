@@ -1,4 +1,5 @@
 <div class="app-north-south">
-  <app-traffic-lights [_isGreen]="_isGreen()" />
-  <app-road [_carsAmount]="_carsAmount()" />
+  <app-traffic-lights [_isGreen]="_carLeaves()" />
+  <app-road [_carLeaves]="_carLeaves()" [_carsAmount]="_carsAmount()" />
 </div>
+{{ "   _carLeaves  NS   " + _carLeaves() }}
