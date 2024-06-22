@@ -23,7 +23,6 @@ const CARS_TO_ACTIVE_ROADS: TCarsToActiveRoad = {
 })
 export class TraficService {
   private _destroyRef = inject(DestroyRef);
-  private _currentTimer = signal(0);
   private _carMap$: Observable<ICars> = of(cars);
   private _carsNs = signal<number[]>([]);
   private _carsEw = signal<number[]>([]);
@@ -37,7 +36,8 @@ export class TraficService {
 
   constructor() {
     this._getCarsStream();
-    this.getRoads();
+    this._getRoads();
+    this._getTimesSet();
   }
 
   private _getCarsStream(): void {
@@ -52,7 +52,7 @@ export class TraficService {
       });
   }
 
-  getRoads(): void {
+  private _getRoads(): void {
     const getRoad = (road: number[]) => {
       return road.reduce((acc: any, curr: number) => {
         if (!acc) {
@@ -70,7 +70,7 @@ export class TraficService {
     this._ewRoad.set(getRoad(this._carsEw()));
   }
 
-  getTimesSet(): void {
+  private _getTimesSet(): void {
     if (this.timesSet.length) {
       return;
     }
