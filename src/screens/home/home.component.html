@@ -3,3 +3,10 @@
   <app-east-west />
 </div>
 {{ _traficService.activeRoad() }}
+{{ _traficService.timer() }}
+{{ "numberOfCarsAtNs: " + _traficService.numberOfCarsAtNs() }}
+{{ "numberOfCarsAtEw: " + _traficService.numberOfCarsAtEw() }}
+<!-- @if (_showcars) {
+  {{ "nsroad:  " + _carsNs }}
+  {{ "ewroad: " + _carsEw }}
+} -->

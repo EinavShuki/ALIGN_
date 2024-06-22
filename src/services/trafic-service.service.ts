@@ -26,14 +26,16 @@ export class TraficService {
   private _carMap$: Observable<ICars> = of(cars);
   private _carsNs = signal<number[]>([]);
   private _carsEw = signal<number[]>([]);
-  private _nsRoad: WritableSignal<Map<number, number>> = signal(new Map());
-  private _ewRoad: WritableSignal<Map<number, number>> = signal(new Map());
-  private _timer: number = 0;
 
   activeRoad: WritableSignal<TActiveRoad> = signal(
     CARS_TO_ACTIVE_ROADS['carsEw'],
   );
-  timesSet: number[] = [];
+  timesArray: number[] = [];
+  nsRoad: WritableSignal<Map<number, number>> = signal(new Map());
+  ewRoad: WritableSignal<Map<number, number>> = signal(new Map());
+  timer = signal(0);
+  numberOfCarsAtNs = signal(0);
+  numberOfCarsAtEw = signal(0);
 
   constructor() {
     this._getCarsStream();
@@ -67,26 +69,50 @@ export class TraficService {
         return acc;
       }, null);
     };
-    this._nsRoad.set(getRoad(this._carsNs()));
-    this._ewRoad.set(getRoad(this._carsEw()));
+    this.nsRoad.set(getRoad(this._carsNs()));
+    this.ewRoad.set(getRoad(this._carsEw()));
   }
 
   private _getTimesSet(): void {
-    if (this.timesSet.length) {
+    if (this.timesArray.length) {
       return;
     }
     const set = new Set<number>([...this._carsNs(), ...this._carsEw()]);
     const sortedArray = Array.from(set).sort((a, b) => a - b);
-    this.timesSet = sortedArray;
+    this.timesArray = sortedArray;
+  }
+
+  private _updatenumberOfCars(
+    nsRoad: Map<number, number>,
+    ewRoad: Map<number, number>,
+    timer: number,
+  ) {
+    if (nsRoad.has(timer + 1) || nsRoad.has(timer + 2)) {
+      this.numberOfCarsAtNs.update(
+        (prev) => prev + (nsRoad.get(timer + 2) || 0),
+      );
+      this.numberOfCarsAtNs.update(
+        (prev) => prev + (nsRoad.get(timer + 1) || 0),
+      );
+    }
+
+    if (ewRoad.has(timer + 2) || ewRoad.has(timer + 1)) {
+      this.numberOfCarsAtEw.update(
+        (prev) => prev + (ewRoad.get(timer + 2) || 0),
+      );
+      this.numberOfCarsAtEw.update(
+        (prev) => prev + (ewRoad.get(timer + 1) || 0),
+      );
+    }
   }
 
   generateActiveRoad(): void {
     debugger;
 
-    const nsRoad: Map<number, number> = this._nsRoad();
-    const ewRoad: Map<number, number> = this._ewRoad();
+    const nsRoad: Map<number, number> = this.nsRoad();
+    const ewRoad: Map<number, number> = this.ewRoad();
 
-    if (!this.timesSet.length || (!nsRoad.size && !ewRoad.size)) {
+    if (!this.timesArray.length || (!nsRoad.size && !ewRoad.size)) {
       return;
     }
     let currentActiveRoad: TActiveRoad | undefined;
@@ -97,7 +123,8 @@ export class TraficService {
       if (nsRoad.get(currentTime)! === 0) {
         nsRoad.delete(currentTime);
       }
-      this._nsRoad.set(nsRoad);
+      this.numberOfCarsAtNs.update((prev) => prev - 1);
+      this.nsRoad.set(nsRoad);
     };
 
     const reducingEW = () => {
@@ -107,21 +134,23 @@ export class TraficService {
       if (ewRoad.get(currentTime)! === 0) {
         ewRoad.delete(currentTime);
       }
-      this._ewRoad.set(ewRoad);
+      this.numberOfCarsAtEw.update((prev) => prev - 1);
+      this.ewRoad.set(ewRoad);
     };
-    let currentTime: number = this.timesSet[0]!;
+    let currentTime: number = this.timesArray[0]!;
 
     if (!nsRoad.has(currentTime) && !ewRoad.has(currentTime)) {
-      this.timesSet.shift()!;
-      currentTime = this.timesSet[0]!;
+      this.timesArray.shift()!;
+      currentTime = this.timesArray[0]!;
     }
 
-    if (currentTime > this._timer) {
+    this.timer.update((prev) => prev + 2);
+    this._updatenumberOfCars(nsRoad, ewRoad, this.timer());
+
+    if (currentTime > this.timer()) {
       //The car is not there it
-      this._timer += 2;
       return;
     }
-    this._timer = currentTime;
 
     if (nsRoad.has(currentTime) && ewRoad.has(currentTime)) {
       if (nsRoad.get(currentTime)! > ewRoad.get(currentTime)!) {
@@ -141,6 +170,7 @@ export class TraficService {
     } else {
       reducingEW();
     }
+
     if (currentActiveRoad) {
       this.activeRoad.set(currentActiveRoad);
     }
